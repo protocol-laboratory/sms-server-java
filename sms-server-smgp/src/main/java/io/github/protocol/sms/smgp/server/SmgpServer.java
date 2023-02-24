@@ -2,7 +2,9 @@ package io.github.protocol.sms.smgp.server;
 
 import io.github.protocol.codec.smgp.SmgpDecoder;
 import io.github.protocol.codec.smgp.SmgpEncoder;
+import io.github.protocol.codec.smgp.SmgpLogin;
 import io.github.protocol.codec.smgp.SmgpMessage;
+import io.github.protocol.codec.smgp.SmgpSubmit;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
@@ -72,7 +74,17 @@ public class SmgpServer extends ChannelInboundHandlerAdapter {
         if (!(message instanceof SmgpMessage)) {
             return;
         }
-        SmgpMessage msg = (SmgpMessage) message;
+        if (message instanceof SmgpLogin) {
+            processLogin(ctx, (SmgpLogin) message);
+        } else if (message instanceof SmgpSubmit) {
+            processSubmit(ctx, (SmgpSubmit) message);
+        }
+    }
+
+    private void processLogin(ChannelHandlerContext ctx, SmgpLogin msg) {
+    }
+
+    private void processSubmit(ChannelHandlerContext ctx, SmgpSubmit msg) {
     }
 
     public void stop() {

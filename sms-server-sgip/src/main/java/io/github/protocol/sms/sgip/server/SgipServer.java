@@ -1,8 +1,14 @@
 package io.github.protocol.sms.sgip.server;
 
+import io.github.protocol.codec.sgip.SgipBind;
 import io.github.protocol.codec.sgip.SgipDecoder;
 import io.github.protocol.codec.sgip.SgipEncoder;
 import io.github.protocol.codec.sgip.SgipMessage;
+import io.github.protocol.codec.sgip.SgipReport;
+import io.github.protocol.codec.sgip.SgipSubmit;
+import io.github.protocol.codec.sgip.SgipTrace;
+import io.github.protocol.codec.sgip.SgipUnbind;
+import io.github.protocol.codec.sgip.SgipUserRpt;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
@@ -72,7 +78,37 @@ public class SgipServer extends ChannelInboundHandlerAdapter {
         if (!(message instanceof SgipMessage)) {
             return;
         }
-        SgipMessage msg = (SgipMessage) message;
+        if (message instanceof SgipBind) {
+            processBind(ctx, (SgipBind) message);
+        } else if (message instanceof SgipUnbind) {
+            processUnbind(ctx, (SgipUnbind) message);
+        } else if (message instanceof SgipSubmit) {
+            processSubmit(ctx, (SgipSubmit) message);
+        } else if (message instanceof SgipReport) {
+            processReport(ctx, (SgipReport) message);
+        } else if (message instanceof SgipUserRpt) {
+            processUserRpt(ctx, (SgipUserRpt) message);
+        } else if (message instanceof SgipTrace) {
+            processTrace(ctx, (SgipTrace) message);
+        }
+    }
+
+    private void processBind(ChannelHandlerContext ctx, SgipBind msg) {
+    }
+
+    private void processUnbind(ChannelHandlerContext ctx, SgipUnbind msg) {
+    }
+
+    private void processSubmit(ChannelHandlerContext ctx, SgipSubmit msg) {
+    }
+
+    private void processReport(ChannelHandlerContext ctx, SgipReport msg) {
+    }
+
+    private void processUserRpt(ChannelHandlerContext ctx, SgipUserRpt msg) {
+    }
+
+    private void processTrace(ChannelHandlerContext ctx, SgipTrace msg) {
     }
 
     public void stop() {

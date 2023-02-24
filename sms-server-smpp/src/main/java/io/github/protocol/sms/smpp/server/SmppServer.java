@@ -1,8 +1,17 @@
 package io.github.protocol.sms.smpp.server;
 
+import io.github.protocol.codec.smpp.SmppBindReceiver;
+import io.github.protocol.codec.smpp.SmppBindTransceiver;
+import io.github.protocol.codec.smpp.SmppBindTransmitter;
 import io.github.protocol.codec.smpp.SmppDecoder;
+import io.github.protocol.codec.smpp.SmppDeliverSm;
 import io.github.protocol.codec.smpp.SmppEncoder;
+import io.github.protocol.codec.smpp.SmppEnquireLink;
 import io.github.protocol.codec.smpp.SmppMessage;
+import io.github.protocol.codec.smpp.SmppQuerySm;
+import io.github.protocol.codec.smpp.SmppSubmitMulti;
+import io.github.protocol.codec.smpp.SmppSubmitSm;
+import io.github.protocol.codec.smpp.SmppUnbind;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
@@ -72,7 +81,52 @@ public class SmppServer extends ChannelInboundHandlerAdapter {
         if (!(message instanceof SmppMessage)) {
             return;
         }
-        SmppMessage msg = (SmppMessage) message;
+        if (message instanceof SmppBindReceiver) {
+            processBindReceiver(ctx, (SmppBindReceiver) message);
+        } else if (message instanceof SmppBindTransmitter) {
+            processBindTransmitter(ctx, (SmppBindTransmitter) message);
+        } else if (message instanceof SmppQuerySm) {
+            processQuerySm(ctx, (SmppQuerySm) message);
+        } else if (message instanceof SmppSubmitSm) {
+            processSubmitSm(ctx, (SmppSubmitSm) message);
+        } else if (message instanceof SmppDeliverSm) {
+            processDeliverSm(ctx, (SmppDeliverSm) message);
+        } else if (message instanceof SmppUnbind) {
+            processUnbind(ctx, (SmppUnbind) message);
+        } else if (message instanceof SmppBindTransceiver) {
+            processBindTransceiver(ctx, (SmppBindTransceiver) message);
+        } else if (message instanceof SmppEnquireLink) {
+            processEnquireLink(ctx, (SmppEnquireLink) message);
+        } else if (message instanceof SmppSubmitMulti) {
+            processSubmitMulti(ctx, (SmppSubmitMulti) message);
+        }
+    }
+
+    private void processBindReceiver(ChannelHandlerContext ctx, SmppBindReceiver msg) {
+    }
+
+    private void processBindTransmitter(ChannelHandlerContext ctx, SmppBindTransmitter msg) {
+    }
+
+    private void processQuerySm(ChannelHandlerContext ctx, SmppQuerySm msg) {
+    }
+
+    private void processSubmitSm(ChannelHandlerContext ctx, SmppSubmitSm msg) {
+    }
+
+    private void processDeliverSm(ChannelHandlerContext ctx, SmppDeliverSm msg) {
+    }
+
+    private void processUnbind(ChannelHandlerContext ctx, SmppUnbind msg) {
+    }
+
+    private void processBindTransceiver(ChannelHandlerContext ctx, SmppBindTransceiver msg) {
+    }
+
+    private void processEnquireLink(ChannelHandlerContext ctx, SmppEnquireLink msg) {
+    }
+
+    private void processSubmitMulti(ChannelHandlerContext ctx, SmppSubmitMulti msg) {
     }
 
     public void stop() {

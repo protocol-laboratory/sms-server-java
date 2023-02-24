@@ -2,7 +2,10 @@ package io.github.protocol.sms.cngp.server;
 
 import io.github.protocol.codec.cngp.CngpDecoder;
 import io.github.protocol.codec.cngp.CngpEncoder;
+import io.github.protocol.codec.cngp.CngpExit;
+import io.github.protocol.codec.cngp.CngpLogin;
 import io.github.protocol.codec.cngp.CngpMessage;
+import io.github.protocol.codec.cngp.CngpSubmit;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
@@ -72,7 +75,22 @@ public class CngpServer extends ChannelInboundHandlerAdapter {
         if (!(message instanceof CngpMessage)) {
             return;
         }
-        CngpMessage msg = (CngpMessage) message;
+        if (message instanceof CngpLogin) {
+            processLogin(ctx, (CngpLogin) message);
+        }  else if (message instanceof CngpSubmit) {
+            processSubmit(ctx, (CngpSubmit) message);
+        } else if (message instanceof CngpExit) {
+            processExit(ctx, (CngpExit) message);
+        }
+    }
+
+    private void processLogin(ChannelHandlerContext ctx, CngpLogin msg) {
+    }
+
+    private void processSubmit(ChannelHandlerContext ctx, CngpSubmit msg) {
+    }
+
+    private void processExit(ChannelHandlerContext ctx, CngpExit msg) {
     }
 
     public void stop() {
