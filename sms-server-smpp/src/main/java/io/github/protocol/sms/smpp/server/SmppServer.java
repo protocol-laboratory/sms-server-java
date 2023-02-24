@@ -1,8 +1,16 @@
 package io.github.protocol.sms.smpp.server;
 
+import io.github.protocol.codec.smpp.SmppBindReceiver;
+import io.github.protocol.codec.smpp.SmppBindTransceiver;
+import io.github.protocol.codec.smpp.SmppBindTransmitter;
 import io.github.protocol.codec.smpp.SmppDecoder;
+import io.github.protocol.codec.smpp.SmppDeliverSm;
 import io.github.protocol.codec.smpp.SmppEncoder;
-import io.github.protocol.codec.smpp.SmppMessage;
+import io.github.protocol.codec.smpp.SmppEnquireLink;
+import io.github.protocol.codec.smpp.SmppQuerySm;
+import io.github.protocol.codec.smpp.SmppSubmitMulti;
+import io.github.protocol.codec.smpp.SmppSubmitSm;
+import io.github.protocol.codec.smpp.SmppUnbind;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
@@ -68,11 +76,53 @@ public class SmppServer extends ChannelInboundHandlerAdapter {
     }
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object message) {
-        if (!(message instanceof SmppMessage)) {
-            return;
+    public void channelRead(ChannelHandlerContext ctx, Object msg) {
+        if (msg instanceof SmppBindReceiver) {
+            processBindReceiver(ctx, (SmppBindReceiver) msg);
+        } else if (msg instanceof SmppBindTransmitter) {
+            processBindTransmitter(ctx, (SmppBindTransmitter) msg);
+        } else if (msg instanceof SmppQuerySm) {
+            processQuerySm(ctx, (SmppQuerySm) msg);
+        } else if (msg instanceof SmppSubmitSm) {
+            processSubmitSm(ctx, (SmppSubmitSm) msg);
+        } else if (msg instanceof SmppDeliverSm) {
+            processDeliverSm(ctx, (SmppDeliverSm) msg);
+        } else if (msg instanceof SmppUnbind) {
+            processUnbind(ctx, (SmppUnbind) msg);
+        } else if (msg instanceof SmppBindTransceiver) {
+            processBindTransceiver(ctx, (SmppBindTransceiver) msg);
+        } else if (msg instanceof SmppEnquireLink) {
+            processEnquireLink(ctx, (SmppEnquireLink) msg);
+        } else if (msg instanceof SmppSubmitMulti) {
+            processSubmitMulti(ctx, (SmppSubmitMulti) msg);
         }
-        SmppMessage msg = (SmppMessage) message;
+    }
+
+    private void processBindReceiver(ChannelHandlerContext ctx, SmppBindReceiver msg) {
+    }
+
+    private void processBindTransmitter(ChannelHandlerContext ctx, SmppBindTransmitter msg) {
+    }
+
+    private void processQuerySm(ChannelHandlerContext ctx, SmppQuerySm msg) {
+    }
+
+    private void processSubmitSm(ChannelHandlerContext ctx, SmppSubmitSm msg) {
+    }
+
+    private void processDeliverSm(ChannelHandlerContext ctx, SmppDeliverSm msg) {
+    }
+
+    private void processUnbind(ChannelHandlerContext ctx, SmppUnbind msg) {
+    }
+
+    private void processBindTransceiver(ChannelHandlerContext ctx, SmppBindTransceiver msg) {
+    }
+
+    private void processEnquireLink(ChannelHandlerContext ctx, SmppEnquireLink msg) {
+    }
+
+    private void processSubmitMulti(ChannelHandlerContext ctx, SmppSubmitMulti msg) {
     }
 
     public void stop() {
