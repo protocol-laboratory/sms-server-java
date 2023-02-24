@@ -4,6 +4,7 @@ import io.github.protocol.codec.cngp.CngpDecoder;
 import io.github.protocol.codec.cngp.CngpEncoder;
 import io.github.protocol.codec.cngp.CngpExit;
 import io.github.protocol.codec.cngp.CngpLogin;
+import io.github.protocol.codec.cngp.CngpMessage;
 import io.github.protocol.codec.cngp.CngpSubmit;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -70,13 +71,16 @@ public class CngpServer extends ChannelInboundHandlerAdapter {
     }
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) {
-        if (msg instanceof CngpLogin) {
-            processLogin(ctx, (CngpLogin) msg);
-        }  else if (msg instanceof CngpSubmit) {
-            processSubmit(ctx, (CngpSubmit) msg);
-        } else if (msg instanceof CngpExit) {
-            processExit(ctx, (CngpExit) msg);
+    public void channelRead(ChannelHandlerContext ctx, Object message) {
+        if (!(message instanceof CngpMessage)) {
+            return;
+        }
+        if (message instanceof CngpLogin) {
+            processLogin(ctx, (CngpLogin) message);
+        }  else if (message instanceof CngpSubmit) {
+            processSubmit(ctx, (CngpSubmit) message);
+        } else if (message instanceof CngpExit) {
+            processExit(ctx, (CngpExit) message);
         }
     }
 

@@ -3,6 +3,7 @@ package io.github.protocol.sms.cmpp.server;
 import io.github.protocol.codec.cmpp.CmppConnect;
 import io.github.protocol.codec.cmpp.CmppDecoder;
 import io.github.protocol.codec.cmpp.CmppEncoder;
+import io.github.protocol.codec.cmpp.CmppMessage;
 import io.github.protocol.codec.cmpp.CmppSubmit;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -70,12 +71,14 @@ public class CmppServer extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object message) {
+        if (!(message instanceof CmppMessage)) {
+            return;
+        }
         if (message instanceof CmppConnect) {
             processConnect(ctx, (CmppConnect) message);
         } else if (message instanceof CmppSubmit) {
             processSubmit(ctx, (CmppSubmit) message);
         }
-
     }
 
     private void processConnect(ChannelHandlerContext ctx, CmppConnect message) {

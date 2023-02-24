@@ -7,6 +7,7 @@ import io.github.protocol.codec.smpp.SmppDecoder;
 import io.github.protocol.codec.smpp.SmppDeliverSm;
 import io.github.protocol.codec.smpp.SmppEncoder;
 import io.github.protocol.codec.smpp.SmppEnquireLink;
+import io.github.protocol.codec.smpp.SmppMessage;
 import io.github.protocol.codec.smpp.SmppQuerySm;
 import io.github.protocol.codec.smpp.SmppSubmitMulti;
 import io.github.protocol.codec.smpp.SmppSubmitSm;
@@ -76,25 +77,28 @@ public class SmppServer extends ChannelInboundHandlerAdapter {
     }
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) {
-        if (msg instanceof SmppBindReceiver) {
-            processBindReceiver(ctx, (SmppBindReceiver) msg);
-        } else if (msg instanceof SmppBindTransmitter) {
-            processBindTransmitter(ctx, (SmppBindTransmitter) msg);
-        } else if (msg instanceof SmppQuerySm) {
-            processQuerySm(ctx, (SmppQuerySm) msg);
-        } else if (msg instanceof SmppSubmitSm) {
-            processSubmitSm(ctx, (SmppSubmitSm) msg);
-        } else if (msg instanceof SmppDeliverSm) {
-            processDeliverSm(ctx, (SmppDeliverSm) msg);
-        } else if (msg instanceof SmppUnbind) {
-            processUnbind(ctx, (SmppUnbind) msg);
-        } else if (msg instanceof SmppBindTransceiver) {
-            processBindTransceiver(ctx, (SmppBindTransceiver) msg);
-        } else if (msg instanceof SmppEnquireLink) {
-            processEnquireLink(ctx, (SmppEnquireLink) msg);
-        } else if (msg instanceof SmppSubmitMulti) {
-            processSubmitMulti(ctx, (SmppSubmitMulti) msg);
+    public void channelRead(ChannelHandlerContext ctx, Object message) {
+        if (!(message instanceof SmppMessage)) {
+            return;
+        }
+        if (message instanceof SmppBindReceiver) {
+            processBindReceiver(ctx, (SmppBindReceiver) message);
+        } else if (message instanceof SmppBindTransmitter) {
+            processBindTransmitter(ctx, (SmppBindTransmitter) message);
+        } else if (message instanceof SmppQuerySm) {
+            processQuerySm(ctx, (SmppQuerySm) message);
+        } else if (message instanceof SmppSubmitSm) {
+            processSubmitSm(ctx, (SmppSubmitSm) message);
+        } else if (message instanceof SmppDeliverSm) {
+            processDeliverSm(ctx, (SmppDeliverSm) message);
+        } else if (message instanceof SmppUnbind) {
+            processUnbind(ctx, (SmppUnbind) message);
+        } else if (message instanceof SmppBindTransceiver) {
+            processBindTransceiver(ctx, (SmppBindTransceiver) message);
+        } else if (message instanceof SmppEnquireLink) {
+            processEnquireLink(ctx, (SmppEnquireLink) message);
+        } else if (message instanceof SmppSubmitMulti) {
+            processSubmitMulti(ctx, (SmppSubmitMulti) message);
         }
     }
 

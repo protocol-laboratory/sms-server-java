@@ -3,6 +3,7 @@ package io.github.protocol.sms.sgip.server;
 import io.github.protocol.codec.sgip.SgipBind;
 import io.github.protocol.codec.sgip.SgipDecoder;
 import io.github.protocol.codec.sgip.SgipEncoder;
+import io.github.protocol.codec.sgip.SgipMessage;
 import io.github.protocol.codec.sgip.SgipReport;
 import io.github.protocol.codec.sgip.SgipSubmit;
 import io.github.protocol.codec.sgip.SgipTrace;
@@ -73,19 +74,22 @@ public class SgipServer extends ChannelInboundHandlerAdapter {
     }
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) {
-        if (msg instanceof SgipBind) {
-            processBind(ctx, (SgipBind) msg);
-        } else if (msg instanceof SgipUnbind) {
-            processUnbind(ctx, (SgipUnbind) msg);
-        } else if (msg instanceof SgipSubmit) {
-            processSubmit(ctx, (SgipSubmit) msg);
-        } else if (msg instanceof SgipReport) {
-            processReport(ctx, (SgipReport) msg);
-        } else if (msg instanceof SgipUserRpt) {
-            processUserRpt(ctx, (SgipUserRpt) msg);
-        } else if (msg instanceof SgipTrace) {
-            processTrace(ctx, (SgipTrace) msg);
+    public void channelRead(ChannelHandlerContext ctx, Object message) {
+        if (!(message instanceof SgipMessage)) {
+            return;
+        }
+        if (message instanceof SgipBind) {
+            processBind(ctx, (SgipBind) message);
+        } else if (message instanceof SgipUnbind) {
+            processUnbind(ctx, (SgipUnbind) message);
+        } else if (message instanceof SgipSubmit) {
+            processSubmit(ctx, (SgipSubmit) message);
+        } else if (message instanceof SgipReport) {
+            processReport(ctx, (SgipReport) message);
+        } else if (message instanceof SgipUserRpt) {
+            processUserRpt(ctx, (SgipUserRpt) message);
+        } else if (message instanceof SgipTrace) {
+            processTrace(ctx, (SgipTrace) message);
         }
     }
 
