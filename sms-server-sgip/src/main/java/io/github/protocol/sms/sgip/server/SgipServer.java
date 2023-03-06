@@ -9,6 +9,7 @@ import io.github.protocol.codec.sgip.SgipSubmit;
 import io.github.protocol.codec.sgip.SgipTrace;
 import io.github.protocol.codec.sgip.SgipUnbind;
 import io.github.protocol.codec.sgip.SgipUserRpt;
+import io.github.protocol.sms.server.util.SslContextUtil;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
@@ -19,14 +20,18 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.ssl.SslContext;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.InetSocketAddress;
+import java.util.Optional;
 
 @Slf4j
 public class SgipServer extends ChannelInboundHandlerAdapter {
 
     private final SgipConfig config;
+
+    private final Optional<SslContext> sslContextOp;
 
     private EventLoopGroup acceptorGroup;
 
@@ -34,6 +39,12 @@ public class SgipServer extends ChannelInboundHandlerAdapter {
 
     public SgipServer(SgipConfig config) {
         this.config = config;
+        if (config.useSsl) {
+            sslContextOp = Optional.of(SslContextUtil.buildFromJks(config.keyStorePath, config.keyStorePassword
+                    , config.trustStorePath, config.trustStorePassword));
+        } else {
+            sslContextOp = Optional.empty();
+        }
     }
 
     public void start() throws Exception {
@@ -59,6 +70,12 @@ public class SgipServer extends ChannelInboundHandlerAdapter {
             @Override
             protected void initChannel(SocketChannel ch) throws Exception {
                 ChannelPipeline p = ch.pipeline();
+                if (config.useSsl) {
+                    if (!sslContextOp.isPresent()) {
+                        throw new IllegalStateException("ssl context not present");
+                    }
+                    p.addLast(sslContextOp.get().newHandler(ch.alloc()));
+                }
                 p.addLast(new SgipDecoder());
                 p.addLast(SgipEncoder.INSTANCE);
                 p.addLast(SgipServer.this);
