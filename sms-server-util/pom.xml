@@ -11,4 +11,11 @@
 
     <artifactId>sms-server-util</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-handler</artifactId>
+        </dependency>
+    </dependencies>
+
 </project>
