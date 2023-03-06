@@ -14,8 +14,8 @@ import java.security.KeyStore;
 public class SslContextUtil {
 
     public static SslContext buildFromJks(String keyPath, String keyPassword, String trustPath, String trustPassword) {
-        try(InputStream keyStream = Files.newInputStream(Paths.get(keyPath));
-            InputStream trustStream = Files.newInputStream(Paths.get(trustPath))) {
+        try (InputStream keyStream = Files.newInputStream(Paths.get(keyPath));
+             InputStream trustStream = Files.newInputStream(Paths.get(trustPath))) {
             KeyStore keyStore = KeyStore.getInstance("JKS");
             keyStore.load(keyStream, keyPassword.toCharArray());
             String defaultKeyAlgorithm = KeyManagerFactory.getDefaultAlgorithm();
