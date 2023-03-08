@@ -1,5 +1,7 @@
 package io.github.protocol.sms.cmpp.server;
 
+import java.util.Set;
+
 public class CmppConfig {
 
     public String host = "0.0.0.0";
@@ -19,6 +21,10 @@ public class CmppConfig {
     public String trustStorePath;
 
     public String trustStorePassword;
+
+    public boolean skipSslVerify;
+
+    public Set<String> ciphers;
 
     public CmppConfig host(String host) {
         this.host = host;
@@ -62,6 +68,16 @@ public class CmppConfig {
 
     public CmppConfig trustStorePassword(String trustStorePassword) {
         this.trustStorePassword = trustStorePassword;
+        return this;
+    }
+
+    public CmppConfig skipSslVerify(boolean skipSslVerify) {
+        this.skipSslVerify = skipSslVerify;
+        return this;
+    }
+
+    public CmppConfig ciphers(Set<String> ciphers) {
+        this.ciphers = ciphers;
         return this;
     }
 }
