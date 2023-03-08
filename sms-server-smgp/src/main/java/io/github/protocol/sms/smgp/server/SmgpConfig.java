@@ -1,5 +1,7 @@
 package io.github.protocol.sms.smgp.server;
 
+import java.util.Set;
+
 public class SmgpConfig {
 
     public String host = "0.0.0.0";
@@ -19,6 +21,10 @@ public class SmgpConfig {
     public String trustStorePath;
 
     public String trustStorePassword;
+
+    public boolean skipSslVerify;
+
+    public Set<String> ciphers;
 
     public SmgpConfig host(String host) {
         this.host = host;
@@ -62,6 +68,16 @@ public class SmgpConfig {
 
     public SmgpConfig trustStorePassword(String trustStorePassword) {
         this.trustStorePassword = trustStorePassword;
+        return this;
+    }
+
+    public SmgpConfig skipSslVerify(boolean skipSslVerify) {
+        this.skipSslVerify = skipSslVerify;
+        return this;
+    }
+
+    public SmgpConfig ciphers(Set<String> ciphers) {
+        this.ciphers = ciphers;
         return this;
     }
 }

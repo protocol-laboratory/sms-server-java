@@ -1,5 +1,7 @@
 package io.github.protocol.sms.sgip.server;
 
+import java.util.Set;
+
 public class SgipConfig {
 
     public String host = "0.0.0.0";
@@ -19,6 +21,10 @@ public class SgipConfig {
     public String trustStorePath;
 
     public String trustStorePassword;
+
+    public boolean skipSslVerify;
+
+    public Set<String> ciphers;
 
     public SgipConfig host(String host) {
         this.host = host;
@@ -62,6 +68,16 @@ public class SgipConfig {
 
     public SgipConfig trustStorePassword(String trustStorePassword) {
         this.trustStorePassword = trustStorePassword;
+        return this;
+    }
+
+    public SgipConfig skipSslVerify(boolean skipSslVerify) {
+        this.skipSslVerify = skipSslVerify;
+        return this;
+    }
+
+    public SgipConfig ciphers(Set<String> ciphers) {
+        this.ciphers = ciphers;
         return this;
     }
 }

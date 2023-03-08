@@ -37,8 +37,9 @@ public class CngpServer extends ChannelInboundHandlerAdapter {
     public CngpServer(CngpConfig config) {
         this.config = config;
         if (config.useSsl) {
-            sslContextOp = Optional.of(SslContextUtil.buildFromJks(config.keyStorePath, config.keyStorePassword
-                    , config.trustStorePath, config.trustStorePassword));
+            sslContextOp = Optional.of(SslContextUtil.buildFromJks(config.keyStorePath, config.keyStorePassword,
+                    config.trustStorePath, config.trustStorePassword, config.skipSslVerify,
+                    config.ciphers));
         } else {
             sslContextOp = Optional.empty();
         }
@@ -94,7 +95,7 @@ public class CngpServer extends ChannelInboundHandlerAdapter {
         }
         if (message instanceof CngpLogin) {
             processLogin(ctx, (CngpLogin) message);
-        }  else if (message instanceof CngpSubmit) {
+        } else if (message instanceof CngpSubmit) {
             processSubmit(ctx, (CngpSubmit) message);
         } else if (message instanceof CngpExit) {
             processExit(ctx, (CngpExit) message);

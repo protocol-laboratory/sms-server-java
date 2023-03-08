@@ -1,5 +1,7 @@
 package io.github.protocol.sms.smpp.server;
 
+import java.util.Set;
+
 public class SmppConfig {
 
     public String host = "0.0.0.0";
@@ -19,6 +21,10 @@ public class SmppConfig {
     public String trustStorePath;
 
     public String trustStorePassword;
+
+    public boolean skipSslVerify;
+
+    public Set<String> ciphers;
 
     public SmppConfig host(String host) {
         this.host = host;
@@ -62,6 +68,16 @@ public class SmppConfig {
 
     public SmppConfig trustStorePassword(String trustStorePassword) {
         this.trustStorePassword = trustStorePassword;
+        return this;
+    }
+
+    public SmppConfig skipSslVerify(boolean skipSslVerify) {
+        this.skipSslVerify = skipSslVerify;
+        return this;
+    }
+
+    public SmppConfig ciphers(Set<String> ciphers) {
+        this.ciphers = ciphers;
         return this;
     }
 }

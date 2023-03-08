@@ -36,8 +36,9 @@ public class SmgpServer extends ChannelInboundHandlerAdapter {
     public SmgpServer(SmgpConfig config) {
         this.config = config;
         if (config.useSsl) {
-            sslContextOp = Optional.of(SslContextUtil.buildFromJks(config.keyStorePath, config.keyStorePassword
-                    , config.trustStorePath, config.trustStorePassword));
+            sslContextOp = Optional.of(SslContextUtil.buildFromJks(config.keyStorePath, config.keyStorePassword,
+                    config.trustStorePath, config.trustStorePassword, config.skipSslVerify,
+                    config.ciphers));
         } else {
             sslContextOp = Optional.empty();
         }
