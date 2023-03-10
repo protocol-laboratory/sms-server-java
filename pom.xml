@@ -6,7 +6,7 @@
 
     <groupId>io.github.protocol-laboratory</groupId>
     <artifactId>sms-server-parent</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
     <packaging>pom</packaging>
     <modules>
         <module>sms-server-cmpp</module>
@@ -27,7 +27,7 @@
         <log4j.version>2.20.0</log4j.version>
         <netty.version>4.1.89.Final</netty.version>
         <slf4j.version>2.0.6</slf4j.version>
-        <sms-codec.version>0.0.6</sms-codec.version>
+        <sms-codec.version>0.0.7</sms-codec.version>
         <!-- plugin -->
         <compiler-plugin.version>3.10.1</compiler-plugin.version>
         <checkstyle-plugin.version>3.2.1</checkstyle-plugin.version>

@@ -12,6 +12,7 @@ import io.github.protocol.codec.sgip.SgipUserRpt;
 import io.github.protocol.sms.server.util.SslContextUtil;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelInitializer;
@@ -26,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.net.InetSocketAddress;
 import java.util.Optional;
 
+@ChannelHandler.Sharable
 @Slf4j
 public class SgipServer extends ChannelInboundHandlerAdapter {
 

@@ -39,6 +39,7 @@ import io.github.protocol.codec.smpp.UnsuccessfulDelivery;
 import io.github.protocol.sms.server.util.MessageIdUtil;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelInitializer;
@@ -55,6 +56,7 @@ import java.util.Optional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@ChannelHandler.Sharable
 @Slf4j
 public class SmppServer extends ChannelInboundHandlerAdapter {
 
