@@ -1,7 +1,10 @@
 package io.github.protocol.sms.sgip.server;
 
+import lombok.ToString;
+
 import java.util.Set;
 
+@ToString
 public class SgipConfig {
 
     public String host = "0.0.0.0";
@@ -16,10 +19,12 @@ public class SgipConfig {
 
     public String keyStorePath;
 
+    @ToString.Exclude
     public String keyStorePassword;
 
     public String trustStorePath;
 
+    @ToString.Exclude
     public String trustStorePassword;
 
     public boolean skipSslVerify;
