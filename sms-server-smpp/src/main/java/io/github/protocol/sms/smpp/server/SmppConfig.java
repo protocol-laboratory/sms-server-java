@@ -1,7 +1,10 @@
 package io.github.protocol.sms.smpp.server;
 
+import lombok.ToString;
+
 import java.util.Set;
 
+@ToString
 public class SmppConfig {
 
     public String host = "0.0.0.0";
@@ -16,10 +19,12 @@ public class SmppConfig {
 
     public String keyStorePath;
 
+    @ToString.Exclude
     public String keyStorePassword;
 
     public String trustStorePath;
 
+    @ToString.Exclude
     public String trustStorePassword;
 
     public boolean skipSslVerify;
