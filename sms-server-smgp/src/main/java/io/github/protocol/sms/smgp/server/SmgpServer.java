@@ -5,6 +5,7 @@ import io.github.protocol.codec.smgp.SmgpEncoder;
 import io.github.protocol.codec.smgp.SmgpLogin;
 import io.github.protocol.codec.smgp.SmgpMessage;
 import io.github.protocol.codec.smgp.SmgpSubmit;
+import io.github.protocol.sms.server.util.BoundAtomicInt;
 import io.github.protocol.sms.server.util.SslContextUtil;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -29,6 +30,8 @@ public class SmgpServer extends ChannelInboundHandlerAdapter {
 
     private final SmgpConfig config;
 
+    private final BoundAtomicInt seq;
+
     private final Optional<SslContext> sslContextOp;
 
     private EventLoopGroup acceptorGroup;
@@ -37,6 +40,7 @@ public class SmgpServer extends ChannelInboundHandlerAdapter {
 
     public SmgpServer(SmgpConfig config) {
         this.config = config;
+        this.seq = new BoundAtomicInt(0x7FFFFFFF);
         if (config.useSsl) {
             sslContextOp = Optional.of(SslContextUtil.buildFromJks(config.keyStorePath, config.keyStorePassword,
                     config.trustStorePath, config.trustStorePassword, config.skipSslVerify,

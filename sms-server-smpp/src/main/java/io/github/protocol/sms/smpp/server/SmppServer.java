@@ -15,6 +15,7 @@ import io.github.protocol.codec.smpp.SmppBindTransmitterRespBody;
 import io.github.protocol.codec.smpp.SmppConst;
 import io.github.protocol.codec.smpp.SmppDecoder;
 import io.github.protocol.codec.smpp.SmppDeliverSm;
+import io.github.protocol.codec.smpp.SmppDeliverSmBody;
 import io.github.protocol.codec.smpp.SmppDeliverSmResp;
 import io.github.protocol.codec.smpp.SmppDeliverSmRespBody;
 import io.github.protocol.codec.smpp.SmppEncoder;
@@ -34,9 +35,10 @@ import io.github.protocol.codec.smpp.SmppSubmitSm;
 import io.github.protocol.codec.smpp.SmppSubmitSmResp;
 import io.github.protocol.codec.smpp.SmppSubmitSmRespBody;
 import io.github.protocol.codec.smpp.SmppUnbind;
-import io.github.protocol.sms.server.util.SslContextUtil;
 import io.github.protocol.codec.smpp.UnsuccessfulDelivery;
+import io.github.protocol.sms.server.util.BoundAtomicInt;
 import io.github.protocol.sms.server.util.MessageIdUtil;
+import io.github.protocol.sms.server.util.SslContextUtil;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandler;
@@ -52,8 +54,9 @@ import io.netty.handler.ssl.SslContext;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.InetSocketAddress;
-import java.util.Optional;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @ChannelHandler.Sharable
@@ -61,6 +64,8 @@ import java.util.stream.Collectors;
 public class SmppServer extends ChannelInboundHandlerAdapter {
 
     private final SmppConfig config;
+
+    private final BoundAtomicInt seq;
 
     private final Optional<SslContext> sslContextOp;
 
@@ -70,8 +75,16 @@ public class SmppServer extends ChannelInboundHandlerAdapter {
 
     private SmppListener listener;
 
+    private final SmppSubmitSmProcessor submitSmProcessor;
+
+    public SmppServer(SmppConfig config, SmppListener listener) {
+        this(config);
+        this.listener = listener;
+    }
+
     public SmppServer(SmppConfig config) {
         this.config = config;
+        this.seq = new BoundAtomicInt(0x7FFFFFFF);
         if (config.useSsl) {
             sslContextOp = Optional.of(SslContextUtil.buildFromJks(config.keyStorePath, config.keyStorePassword,
                     config.trustStorePath, config.trustStorePassword, config.skipSslVerify,
@@ -79,11 +92,11 @@ public class SmppServer extends ChannelInboundHandlerAdapter {
         } else {
             sslContextOp = Optional.empty();
         }
-    }
-
-    public SmppServer(SmppConfig config, SmppListener listener) {
-        this(config);
-        this.listener = listener;
+        if (config.submitSmProcessor != null) {
+            this.submitSmProcessor = config.submitSmProcessor;
+        } else {
+            this.submitSmProcessor = new SmppSubmitSmDummyProcessor();
+        }
     }
 
     public void start() throws Exception {
@@ -181,7 +194,6 @@ public class SmppServer extends ChannelInboundHandlerAdapter {
         }
         SmppHeader header = new SmppHeader(SmppConst.QUERY_SM_RESP_ID, 0, msg.header().sequenceNumber());
         SmppQuerySmBody body = msg.body();
-        // ?
         SmppQuerySmRespBody respBody = new SmppQuerySmRespBody(body.messageId(), null, (byte) 6, (byte) 0);
         ctx.writeAndFlush(new SmppQuerySmResp(header, respBody));
     }
@@ -191,8 +203,19 @@ public class SmppServer extends ChannelInboundHandlerAdapter {
             listener.onSubmitSm(msg);
         }
         SmppHeader header = new SmppHeader(SmppConst.SUBMIT_SM_RESP_ID, 0, msg.header().sequenceNumber());
-        SmppSubmitSmRespBody respBody = new SmppSubmitSmRespBody(MessageIdUtil.generateMessageId());
+        String messageId = MessageIdUtil.generateMessageId();
+        SmppSubmitSmRespBody respBody = new SmppSubmitSmRespBody(messageId);
         ctx.writeAndFlush(new SmppSubmitSmResp(header, respBody));
+
+        Optional<CompletableFuture<SmppDeliverSmBody>> respOp = submitSmProcessor.process(msg, messageId);
+        respOp.ifPresent(future -> future.whenComplete((resp, ex) -> {
+            if (ex != null) {
+                log.error("submit sm failed", ex);
+            } else {
+                SmppHeader respHeader = new SmppHeader(SmppConst.DELIVER_SM_ID, seq.nextVal());
+                ctx.writeAndFlush(new SmppDeliverSm(respHeader, resp));
+            }
+        }));
     }
 
     private void processDeliverSm(ChannelHandlerContext ctx, SmppDeliverSm msg) {
