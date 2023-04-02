@@ -5,6 +5,7 @@ import io.github.protocol.codec.cmpp.CmppDecoder;
 import io.github.protocol.codec.cmpp.CmppEncoder;
 import io.github.protocol.codec.cmpp.CmppMessage;
 import io.github.protocol.codec.cmpp.CmppSubmit;
+import io.github.protocol.sms.server.util.BoundAtomicInt;
 import io.github.protocol.sms.server.util.SslContextUtil;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -29,6 +30,8 @@ public class CmppServer extends ChannelInboundHandlerAdapter {
 
     private final CmppConfig config;
 
+    private final BoundAtomicInt seq;
+
     private final Optional<SslContext> sslContextOp;
 
     private EventLoopGroup acceptorGroup;
@@ -37,6 +40,7 @@ public class CmppServer extends ChannelInboundHandlerAdapter {
 
     public CmppServer(CmppConfig config) {
         this.config = config;
+        this.seq = new BoundAtomicInt(0x7FFFFFFF);
         if (config.useSsl) {
             sslContextOp = Optional.of(SslContextUtil.buildFromJks(config.keyStorePath, config.keyStorePassword,
                     config.trustStorePath, config.trustStorePassword, config.skipSslVerify,

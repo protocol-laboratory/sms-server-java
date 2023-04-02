@@ -31,6 +31,8 @@ public class SmppConfig {
 
     public Set<String> ciphers;
 
+    public SmppSubmitSmProcessor submitSmProcessor;
+
     public SmppConfig host(String host) {
         this.host = host;
         return this;
@@ -83,6 +85,11 @@ public class SmppConfig {
 
     public SmppConfig ciphers(Set<String> ciphers) {
         this.ciphers = ciphers;
+        return this;
+    }
+
+    public SmppConfig submitSmProcessor(SmppSubmitSmProcessor submitSmProcessor) {
+        this.submitSmProcessor = submitSmProcessor;
         return this;
     }
 }

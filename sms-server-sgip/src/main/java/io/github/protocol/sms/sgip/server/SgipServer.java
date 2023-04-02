@@ -9,6 +9,7 @@ import io.github.protocol.codec.sgip.SgipSubmit;
 import io.github.protocol.codec.sgip.SgipTrace;
 import io.github.protocol.codec.sgip.SgipUnbind;
 import io.github.protocol.codec.sgip.SgipUserRpt;
+import io.github.protocol.sms.server.util.BoundAtomicInt;
 import io.github.protocol.sms.server.util.SslContextUtil;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -33,6 +34,8 @@ public class SgipServer extends ChannelInboundHandlerAdapter {
 
     private final SgipConfig config;
 
+    private final BoundAtomicInt seq;
+
     private final Optional<SslContext> sslContextOp;
 
     private EventLoopGroup acceptorGroup;
@@ -41,6 +44,7 @@ public class SgipServer extends ChannelInboundHandlerAdapter {
 
     public SgipServer(SgipConfig config) {
         this.config = config;
+        this.seq = new BoundAtomicInt(0x7FFFFFFF);
         if (config.useSsl) {
             sslContextOp = Optional.of(SslContextUtil.buildFromJks(config.keyStorePath, config.keyStorePassword,
                     config.trustStorePath, config.trustStorePassword, config.skipSslVerify,
