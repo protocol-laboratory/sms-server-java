@@ -37,7 +37,7 @@ public class SmppSubmitMockProcessor implements SmppSubmitSmProcessor {
             SmppDeliverSmBody deliverSmBody = createSmppDeliverSmBody(submitSm, messageId, mockReportStatus);
             future.complete(deliverSmBody);
         }, mockDelayInMill, TimeUnit.MILLISECONDS);
-        return Optional.empty();
+        return Optional.of(future);
     }
 
     private SmppDeliverSmBody createSmppDeliverSmBody(SmppSubmitSm submitSm, String southMsgId, String status) {
