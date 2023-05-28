@@ -73,7 +73,7 @@ public class SmppSubmitMockProcessor implements SmppSubmitSmProcessor {
                 defaultValue,
                 dataCoding,
                 defaultValue,
-                (byte) content.length,
+                (short) content.length,
                 content);
     }
 
