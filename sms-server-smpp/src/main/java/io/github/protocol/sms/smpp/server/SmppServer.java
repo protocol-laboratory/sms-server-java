@@ -172,7 +172,7 @@ public class SmppServer extends ChannelInboundHandlerAdapter {
         if (listener != null) {
             listener.onBindReceiver(msg);
         }
-        SmppHeader header = new SmppHeader(SmppConst.BIND_RECEIVER_ID, 0, msg.header().sequenceNumber());
+        SmppHeader header = new SmppHeader(SmppConst.BIND_RECEIVER_RESP_ID, 0, msg.header().sequenceNumber());
         SmppBindReceiverBody body = msg.body();
         SmppBindReceiverRespBody respBody = new SmppBindReceiverRespBody(body.systemId());
         ctx.writeAndFlush(new SmppBindReceiverResp(header, respBody));
