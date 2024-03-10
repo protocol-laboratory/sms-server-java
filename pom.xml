@@ -24,19 +24,21 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <src.dir>src/main/java</src.dir>
         <!-- dependency -->
-        <junit-jupiter-engine.version>5.9.2</junit-jupiter-engine.version>
+        <junit-jupiter-engine.version>5.10.2</junit-jupiter-engine.version>
         <log4j.version>2.20.0</log4j.version>
-        <mockito.version>5.2.0</mockito.version>
-        <netty.version>4.1.90.Final</netty.version>
+        <lombok.version>1.18.30</lombok.version>
+        <mockito.version>5.11.0</mockito.version>
+        <netty.version>4.1.107.Final</netty.version>
+        <puppycrawl.version>10.14.0</puppycrawl.version>
         <slf4j.version>2.0.7</slf4j.version>
-        <sms-codec.version>0.0.11</sms-codec.version>
+        <sms-codec.version>0.0.12</sms-codec.version>
         <!-- plugin -->
-        <compiler-plugin.version>3.10.1</compiler-plugin.version>
-        <checkstyle-plugin.version>3.2.1</checkstyle-plugin.version>
-        <lombok.version>1.18.26</lombok.version>
-        <puppycrawl.version>10.11.0</puppycrawl.version>
-        <spotbugs-maven-plugin.version>4.7.3.0</spotbugs-maven-plugin.version>
-        <surefire-plugin.version>3.1.0</surefire-plugin.version>
+        <lombok-maven-plugin.version>1.18.20.0</lombok-maven-plugin.version>
+        <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
+        <maven-checkstyle-plugin.version>3.3.1</maven-checkstyle-plugin.version>
+        <maven-javadoc-plugin.version>3.6.0</maven-javadoc-plugin.version>
+        <maven-surefire-plugin.version>3.2.1</maven-surefire-plugin.version>
+        <spotbugs-maven-plugin.version>4.8.3.1</spotbugs-maven-plugin.version>
     </properties>
 
     <dependencyManagement>
@@ -99,7 +101,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>${compiler-plugin.version}</version>
+                <version>${maven-compiler-plugin.version}</version>
                 <configuration>
                     <source>${maven.compiler.source}</source>
                     <target>${maven.compiler.target}</target>
@@ -108,12 +110,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>${surefire-plugin.version}</version>
+                <version>${maven-surefire-plugin.version}</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>${checkstyle-plugin.version}</version>
+                <version>${maven-checkstyle-plugin.version}</version>
                 <dependencies>
                     <dependency>
                         <groupId>com.puppycrawl.tools</groupId>
@@ -167,7 +169,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.4.1</version>
+                <version>${maven-javadoc-plugin.version}</version>
                 <configuration>
                     <sourcepath>${src.dir}</sourcepath>
                     <doclint>all,-missing</doclint>
@@ -293,12 +295,12 @@
                     <plugin>
                         <groupId>org.projectlombok</groupId>
                         <artifactId>lombok-maven-plugin</artifactId>
-                        <version>1.18.20.0</version>
+                        <version>${lombok-maven-plugin.version}</version>
                         <dependencies>
                             <dependency>
                                 <groupId>org.projectlombok</groupId>
                                 <artifactId>lombok</artifactId>
-                                <version>1.18.24</version>
+                                <version>${lombok.version}</version>
                             </dependency>
                         </dependencies>
                         <executions>
