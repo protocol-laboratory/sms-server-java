@@ -1,8 +1,12 @@
 package io.github.protocol.sms.sgip.server;
 
 import io.github.protocol.codec.sgip.SgipBind;
+import io.github.protocol.codec.sgip.SgipBindResp;
+import io.github.protocol.codec.sgip.SgipBindRespBody;
+import io.github.protocol.codec.sgip.SgipConst;
 import io.github.protocol.codec.sgip.SgipDecoder;
 import io.github.protocol.codec.sgip.SgipEncoder;
+import io.github.protocol.codec.sgip.SgipHeader;
 import io.github.protocol.codec.sgip.SgipMessage;
 import io.github.protocol.codec.sgip.SgipReport;
 import io.github.protocol.codec.sgip.SgipSubmit;
@@ -118,6 +122,9 @@ public class SgipServer extends ChannelInboundHandlerAdapter {
     }
 
     private void processBind(ChannelHandlerContext ctx, SgipBind msg) {
+        SgipHeader header = new SgipHeader(SgipConst.BIND_RESP_ID, msg.header().sequenceNumber());
+        SgipBindRespBody respBody = new SgipBindRespBody((byte) 0, "");
+        ctx.writeAndFlush(new SgipBindResp(header, respBody));
     }
 
     private void processUnbind(ChannelHandlerContext ctx, SgipUnbind msg) {

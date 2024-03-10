@@ -1,8 +1,13 @@
 package io.github.protocol.sms.cmpp.server;
 
 import io.github.protocol.codec.cmpp.CmppConnect;
+import io.github.protocol.codec.cmpp.CmppConnectBody;
+import io.github.protocol.codec.cmpp.CmppConnectResp;
+import io.github.protocol.codec.cmpp.CmppConnectRespBody;
+import io.github.protocol.codec.cmpp.CmppConst;
 import io.github.protocol.codec.cmpp.CmppDecoder;
 import io.github.protocol.codec.cmpp.CmppEncoder;
+import io.github.protocol.codec.cmpp.CmppHeader;
 import io.github.protocol.codec.cmpp.CmppMessage;
 import io.github.protocol.codec.cmpp.CmppSubmit;
 import io.github.protocol.sms.server.util.BoundAtomicInt;
@@ -22,6 +27,7 @@ import io.netty.handler.ssl.SslContext;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.InetSocketAddress;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 @ChannelHandler.Sharable
@@ -105,7 +111,12 @@ public class CmppServer extends ChannelInboundHandlerAdapter {
         }
     }
 
-    private void processConnect(ChannelHandlerContext ctx, CmppConnect message) {
+    private void processConnect(ChannelHandlerContext ctx, CmppConnect msg) {
+        CmppHeader header = new CmppHeader(CmppConst.CONNECT_RESP_ID, msg.header().sequenceId());
+        CmppConnectBody body = msg.body();
+        String authenticator = new String(body.authenticatorSource(), StandardCharsets.UTF_8);
+        CmppConnectRespBody respBody = new CmppConnectRespBody(0, authenticator, (byte) 0);
+        ctx.writeAndFlush(new CmppConnectResp(header, respBody));
     }
 
     private void processSubmit(ChannelHandlerContext ctx, CmppSubmit message) {

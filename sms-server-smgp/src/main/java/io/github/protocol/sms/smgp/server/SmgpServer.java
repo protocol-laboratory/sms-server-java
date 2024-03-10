@@ -1,8 +1,13 @@
 package io.github.protocol.sms.smgp.server;
 
+import io.github.protocol.codec.smgp.SmgpConst;
 import io.github.protocol.codec.smgp.SmgpDecoder;
 import io.github.protocol.codec.smgp.SmgpEncoder;
+import io.github.protocol.codec.smgp.SmgpHeader;
 import io.github.protocol.codec.smgp.SmgpLogin;
+import io.github.protocol.codec.smgp.SmgpLoginBody;
+import io.github.protocol.codec.smgp.SmgpLoginResp;
+import io.github.protocol.codec.smgp.SmgpLoginRespBody;
 import io.github.protocol.codec.smgp.SmgpMessage;
 import io.github.protocol.codec.smgp.SmgpSubmit;
 import io.github.protocol.sms.server.util.BoundAtomicInt;
@@ -106,6 +111,10 @@ public class SmgpServer extends ChannelInboundHandlerAdapter {
     }
 
     private void processLogin(ChannelHandlerContext ctx, SmgpLogin msg) {
+        SmgpHeader header = new SmgpHeader(SmgpConst.LOGIN_RESP_ID, msg.header().sequenceID());
+        SmgpLoginBody body = msg.body();
+        SmgpLoginRespBody respBody = new SmgpLoginRespBody(0, body.authenticatorClient(), (byte) 0);
+        ctx.writeAndFlush(new SmgpLoginResp(header, respBody));
     }
 
     private void processSubmit(ChannelHandlerContext ctx, SmgpSubmit msg) {

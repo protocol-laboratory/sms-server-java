@@ -12,16 +12,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: line lint
+name: unit tests
 on:
+  push:
+    branches:
+      - main
   pull_request:
     branches:
       - main
+
 jobs:
-  line-lint:
-    name: line lint
+  unit-tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: linelint
-        uses: fernandrone/linelint@master
+      - name: Set up Maven Central Repository
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: unit tests
+        run: mvn -B clean test
+      - uses: codecov/codecov-action@v2
+        with:
+          files: ./java-tool/target/site/jacoco/jacoco.xml,./sdk-codec-bk/target/site/jacoco/jacoco.xml
+          flags: unittests

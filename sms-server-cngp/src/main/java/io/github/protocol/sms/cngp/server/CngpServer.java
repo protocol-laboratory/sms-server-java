@@ -1,9 +1,14 @@
 package io.github.protocol.sms.cngp.server;
 
+import io.github.protocol.codec.cngp.CngpConst;
 import io.github.protocol.codec.cngp.CngpDecoder;
 import io.github.protocol.codec.cngp.CngpEncoder;
 import io.github.protocol.codec.cngp.CngpExit;
+import io.github.protocol.codec.cngp.CngpHeader;
 import io.github.protocol.codec.cngp.CngpLogin;
+import io.github.protocol.codec.cngp.CngpLoginBody;
+import io.github.protocol.codec.cngp.CngpLoginResp;
+import io.github.protocol.codec.cngp.CngpLoginRespBody;
 import io.github.protocol.codec.cngp.CngpMessage;
 import io.github.protocol.codec.cngp.CngpSubmit;
 import io.github.protocol.sms.server.util.BoundAtomicInt;
@@ -109,6 +114,10 @@ public class CngpServer extends ChannelInboundHandlerAdapter {
     }
 
     private void processLogin(ChannelHandlerContext ctx, CngpLogin msg) {
+        CngpHeader header = new CngpHeader(CngpConst.LOGIN_RESP_ID, 0, msg.header().sequenceId());
+        CngpLoginBody body = msg.body();
+        CngpLoginRespBody respBody = new CngpLoginRespBody(body.authenticatorClient(), (byte) 0);
+        ctx.writeAndFlush(new CngpLoginResp(header, respBody));
     }
 
     private void processSubmit(ChannelHandlerContext ctx, CngpSubmit msg) {
